@@ -1,45 +1,129 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>C++ WebSocket Test</title>
+    <audio id = "uwu" src="sounds/click.mp3"></audio>
+    <title>websocket chat :3</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            margin: 0;
+            padding: 15px;
+            background: #4a90e2;
+            color: white;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        #log {
+            list-style: none;
+            padding: 15px;
+            margin: 0;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        #log li {
+            background: #eef2f7;
+            margin-bottom: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            max-width: 600px;
+        }
+
+        .input-area {
+            display: flex;
+            padding: 12px;
+            background: white;
+            border-top: 1px solid #ddd;
+        }
+
+        #msg {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            outline: none;
+            font-size: 14px;
+        }
+
+        button {
+            margin-left: 10px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #4a90e2;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #357bd8;
+        }
+    </style>
 </head>
 <body>
-    <h1>WebSocket Client</h1>
 
-    <input id="msg" placeholder="Type message..." />
+<h1>chat</h1>
+
+<ul id="log"></ul>
+
+<div class="input-area">
+    <input id="msg" placeholder="Type message... (or /help)" />
     <button onclick="sendMessage()">Send</button>
+</div>
 
-    <ul id="log"></ul>
-
-    <script>
-        const ws = new WebSocket("ws://127.0.0.1:8080");
-
-        const log = document.getElementById("log");
-
-        ws.onopen = () => {
-            addMessage("Connected to server");
-        };
-
-        ws.onmessage = (event) => {
-            addMessage("Server: " + event.data);
-        };
-
-        ws.onclose = () => {
-            addMessage("Disconnected");
-        };
-
-        function sendMessage() {
-            const input = document.getElementById("msg");
-            ws.send(input.value);
-            addMessage("You: " + input.value);
-            input.value = "";
+<script>
+    
+    const ws = new WebSocket("ws://localhost:8080");
+    
+    const log = document.getElementById("log");
+    const input = document.getElementById("msg");
+    
+    ws.onopen = () => {
+        addMessage("Connected to server");
+    };
+    
+    ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if(data.type == "message"){
+            addMessage(event.data);
+        }else if(data.type == "click :3"){
+            document.getElementById('uwu').play();
+            addMessage(event.data);
         }
+    };
 
-        function addMessage(msg) {
-            const li = document.createElement("li");
-            li.textContent = msg;
-            log.appendChild(li);
+    ws.onclose = () => {
+        addMessage("Disconnected");
+    };
+
+    function sendMessage() {
+        ws.send(input.value);
+        input.value = "";
+    }
+
+    function addMessage(msg) {
+        const li = document.createElement("li");
+        li.textContent = msg;
+        log.appendChild(li);
+
+        log.scrollTop = log.scrollHeight;
+    }
+
+    input.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+            sendMessage();
         }
-    </script>
+    });
+</script>
+
 </body>
 </html>
