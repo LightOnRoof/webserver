@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>C++ WebSocket Test</title>
+</head>
+<body>
+    <h1>WebSocket Client</h1>
+
+    <input id="msg" placeholder="Type message..." />
+    <button onclick="sendMessage()">Send</button>
+
+    <ul id="log"></ul>
+
+    <script>
+        const ws = new WebSocket("ws://127.0.0.1:8080");
+
+        const log = document.getElementById("log");
+
+        ws.onopen = () => {
+            addMessage("Connected to server");
+        };
+
+        ws.onmessage = (event) => {
+            addMessage("Server: " + event.data);
+        };
+
+        ws.onclose = () => {
+            addMessage("Disconnected");
+        };
+
+        function sendMessage() {
+            const input = document.getElementById("msg");
+            ws.send(input.value);
+            addMessage("You: " + input.value);
+            input.value = "";
+        }
+
+        function addMessage(msg) {
+            const li = document.createElement("li");
+            li.textContent = msg;
+            log.appendChild(li);
+        }
+    </script>
+</body>
+</html>
