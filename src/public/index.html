@@ -83,7 +83,9 @@
 
 <script>
     
-    const ws = new WebSocket("ws://localhost:8080");
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const wsUrl = protocol + "//" + window.location.host + "/";
+    const ws = new WebSocket(wsUrl);
     
     const log = document.getElementById("log");
     const input = document.getElementById("msg");

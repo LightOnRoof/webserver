@@ -6,8 +6,9 @@
 <body>
     :3
 <script>
-    
-    const ws = new WebSocket("ws://localhost:8080/sub");
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const wsUrl = protocol + "//" + window.location.host + "/sub";
+    const ws = new WebSocket(wsUrl);
     
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
