@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>get clickered :3</title>
+</head>
+<body>
+    :3
+<script>
+    
+    const ws = new WebSocket("ws://localhost:8080/sub");
+    
+    ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if(data.type == "click :3"){
+            const audioElement = new Audio("sounds/click.mp3");
+            audioElement.play();
+        }
+    };
+
+</script>
+
+</body>
+</html>
