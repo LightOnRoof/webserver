@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cstdlib>
 #include <filesystem>
 
 using json = nlohmann::json;
@@ -232,11 +233,15 @@ int main() {
     /* 3. Handle incoming data chunks */
     res->onData([res, body](std::string_view data, bool last) {
         body->append(data);
-
         if (last) {
+            std::cout<<"click requewted"<<std::endl;
+            //ping my phone lol
+            std::string cmd = "curl -d \"OwO!\" ntfy.sh/clickuwupls";
+            system(cmd.c_str());
             // Broadcast to all connected WebSocket clients
             json response;
             response["type"]="click :3";
+            
             for (auto *client : clickClients) {
                 client->send(response.dump(), uWS::OpCode::TEXT);
             }
